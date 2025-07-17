@@ -14,7 +14,7 @@ class DataGeneratorInterface(ABC):
     """Interface for data generators following Interface Segregation Principle."""
 
     @abstractmethod
-    def generate(self, n_samples: int, **kwargs) -> torch.Tensor:
+    def generate(self, n_samples: int, **kwargs: Any) -> torch.Tensor:
         """Generate n_samples of data."""
         pass
 

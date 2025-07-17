@@ -83,7 +83,7 @@ class DiffusionModel(nn.Module):
             t = torch.full((n_samples,), i, dtype=torch.long)
             x = self.reverse_step(x, t)
 
-            if return_trajectory:
+            if return_trajectory and trajectory is not None:
                 trajectory.append(x.clone())
 
         return (x, trajectory) if return_trajectory else (x, None)

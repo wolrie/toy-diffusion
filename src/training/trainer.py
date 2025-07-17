@@ -21,7 +21,7 @@ class TrainingMetrics:
         self.losses: List[float] = []
         self.learning_rates: List[float] = []
 
-    def add_epoch_metrics(self, loss: float, lr: float):
+    def add_epoch_metrics(self, loss: float, lr: float) -> None:
         """Add metrics for an epoch."""
         self.losses.append(loss)
         self.learning_rates.append(lr)

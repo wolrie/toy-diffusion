@@ -127,7 +127,7 @@ class ExperimentConfig:
             output=OutputConfig(),
         )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate configuration after initialization."""
         # Validate data config
         if self.data.n_data_points <= 0:

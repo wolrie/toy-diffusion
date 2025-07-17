@@ -1,6 +1,6 @@
 """Scheduler Factory - Creates learning rate schedulers."""
 
-from typing import Callable, Dict
+from typing import Any, Callable, Dict
 
 import torch
 
@@ -11,13 +11,13 @@ class SchedulerFactory:
     _schedulers: Dict[str, Callable] = {}
 
     @classmethod
-    def register_scheduler(cls, name: str, scheduler_fn: Callable):
+    def register_scheduler(cls, name: str, scheduler_fn: Callable) -> None:
         """Register a new scheduler type."""
         cls._schedulers[name] = scheduler_fn
 
     @classmethod
     def create_scheduler(
-        cls, name: str, optimizer: torch.optim.Optimizer, **kwargs
+        cls, name: str, optimizer: torch.optim.Optimizer, **kwargs: Any
     ) -> torch.optim.lr_scheduler._LRScheduler:
         """Create a scheduler by name."""
         if name not in cls._schedulers:
@@ -28,7 +28,7 @@ class SchedulerFactory:
 
 # Register default schedulers
 def _create_cosine_scheduler(
-    optimizer: torch.optim.Optimizer, **kwargs
+    optimizer: torch.optim.Optimizer, **kwargs: Any
 ) -> torch.optim.lr_scheduler.CosineAnnealingLR:
     """Create cosine annealing scheduler."""
     return torch.optim.lr_scheduler.CosineAnnealingLR(
@@ -39,7 +39,7 @@ def _create_cosine_scheduler(
 
 
 def _create_step_scheduler(
-    optimizer: torch.optim.Optimizer, **kwargs
+    optimizer: torch.optim.Optimizer, **kwargs: Any
 ) -> torch.optim.lr_scheduler.StepLR:
     """Create step scheduler."""
     return torch.optim.lr_scheduler.StepLR(

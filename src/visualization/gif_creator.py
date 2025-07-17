@@ -1,7 +1,7 @@
 """GIF Creator - Handles animated GIF creation for diffusion model trajectories."""
 
 from pathlib import Path
-from typing import List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
@@ -23,7 +23,7 @@ class GifCreator:
         self.figsize = figsize
         self.fps = fps
         self.dpi = dpi
-        self.default_style = {
+        self.default_style: Dict[str, Any] = {
             "xlim": (-2.5, 2.5),
             "ylim": (-2.5, 2.5),
             "grid_alpha": 0.3,
@@ -101,7 +101,7 @@ class GifCreator:
         title = ax.set_title(title_template.format(step=0, total=total_steps - 1))
         ax.legend(loc="upper right")
 
-        def animate(frame):
+        def animate(frame: int) -> Any:
             """Animation function for each frame."""
             current_traj = sampled_trajectory[frame]
             current_traj_np = (
@@ -187,7 +187,7 @@ class GifCreator:
         scat = ax2.scatter([], [], s=20, c="red", alpha=0.8)
         title2 = ax2.set_title(title_template.format(step=0))
 
-        def animate(frame):
+        def animate(frame: int) -> Any:
             """Animation function for each frame."""
             current_traj = sampled_trajectory[frame]
             current_traj_np = (
@@ -262,7 +262,7 @@ class GifCreator:
         ax.set_ylabel("Y")
         ax.grid(True, alpha=self.default_style["grid_alpha"])
 
-        def animate(frame):
+        def animate(frame: int) -> Any:
             """Animation function for each frame."""
             ax.clear()
             ax.set_xlim(self.default_style["xlim"])

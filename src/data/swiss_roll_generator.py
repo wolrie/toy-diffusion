@@ -24,12 +24,12 @@ class SwissRollGenerator(DataGeneratorInterface):
         self.random_state = random_state
         self._setup_random_state()
 
-    def _setup_random_state(self):
+    def _setup_random_state(self) -> None:
         """Setup random state for reproducibility."""
         torch.manual_seed(self.random_state)
         np.random.seed(self.random_state)
 
-    def generate(self, n_samples: int, **kwargs) -> torch.Tensor:
+    def generate(self, n_samples: int, **kwargs: Any) -> torch.Tensor:
         """
         Generate Swiss Roll data.
 

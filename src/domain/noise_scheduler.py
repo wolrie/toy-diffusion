@@ -27,13 +27,24 @@ class NoiseSchedulerInterface(ABC):
         pass
 
     @abstractmethod
-    def get_posterior_params(self, t: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def get_posterior_params(
+        self, t: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Get parameters for posterior distribution."""
         pass
 
 
 class LinearNoiseScheduler(nn.Module, NoiseSchedulerInterface):
     """Linear noise scheduler implementation."""
+
+    # Declare tensor attributes for type checking
+    betas: torch.Tensor
+    alphas: torch.Tensor
+    alphas_cumprod: torch.Tensor
+    sqrt_alphas_cumprod: torch.Tensor
+    sqrt_one_minus_alphas_cumprod: torch.Tensor
+    sqrt_recip_alphas: torch.Tensor
+    posterior_variance: torch.Tensor
 
     def __init__(self, timesteps: int, beta_min: float = 0.0004, beta_max: float = 0.04) -> None:
         """Initialize the linear noise scheduler."""
@@ -82,7 +93,9 @@ class LinearNoiseScheduler(nn.Module, NoiseSchedulerInterface):
 
         return sqrt_alpha_cumprod * x0 + sqrt_one_minus_alpha_cumprod * noise
 
-    def get_posterior_params(self, t: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def get_posterior_params(
+        self, t: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Get posterior mean coefficients and variance for reverse process."""
         sqrt_recip_alphas_t = self.sqrt_recip_alphas[t].unsqueeze(1)
         betas_t = self.betas[t].unsqueeze(1)
