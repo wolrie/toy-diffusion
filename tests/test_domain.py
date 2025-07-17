@@ -2,15 +2,7 @@
 Tests for domain module - Core diffusion model logic.
 """
 
-import os
-import sys
-from unittest.mock import Mock
-
-import numpy as np
-import pytest
 import torch
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from domain.diffusion_model import DiffusionModel, DiffusionNetwork
 from domain.noise_scheduler import LinearNoiseScheduler

@@ -2,15 +2,9 @@
 Test configuration and fixtures for pytest.
 """
 
-import os
-import sys
-
 import numpy as np
 import pytest
 import torch
-
-# Add src to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from config.config import (
     DataConfig,

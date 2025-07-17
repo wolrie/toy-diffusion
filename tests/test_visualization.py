@@ -2,16 +2,11 @@
 Tests for visualization module - Plotting and animation functionality.
 """
 
-import os
-import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
-import numpy as np
 import pytest
 import torch
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from config.config import VisualizationConfig
 from training.trainer import TrainingMetrics
@@ -410,7 +405,7 @@ class TestVisualizationIntegration:
         # Should handle empty data gracefully
         try:
             with patch("matplotlib.pyplot.savefig"), patch("matplotlib.pyplot.close"):
-                fig = visualizer.plot_manager.create_data_comparison_plot(empty_data, valid_data)
+                _ = visualizer.plot_manager.create_data_comparison_plot(empty_data, valid_data)
         except Exception as e:
             # If it raises an exception, it should be a meaningful one
             assert "empty" in str(e).lower() or "size" in str(e).lower()

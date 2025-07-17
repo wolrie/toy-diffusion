@@ -2,17 +2,16 @@
 Integration tests - End-to-end testing of the complete diffusion model pipeline.
 """
 
-import os
-import sys
-import tempfile
-
 import numpy as np
-import pytest
 import torch
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
-from config.config import DataConfig, ExperimentConfig, ModelConfig, TrainingConfig
+from config.config import (
+    DataConfig,
+    ExperimentConfig,
+    ModelConfig,
+    TrainingConfig,
+    VisualizationConfig,
+)
 from data.swiss_roll_generator import SwissRollGenerator
 from domain.diffusion_model import DiffusionModel
 from domain.noise_scheduler import LinearNoiseScheduler
@@ -150,7 +149,7 @@ class TestEndToEndPipeline:
             assert samples.shape == (50, 2)
             assert torch.isfinite(samples).all()
 
-            print(f"Configuration {i+1}: Final loss = {metrics.get_final_loss():.4f}")
+            print(f"Configuration {i+1}: Final loss = {metrics.get_final_loss(): .4f}")
 
     def test_gradient_flow_integration(self):
         """Test that gradients flow properly through the entire model."""
@@ -247,17 +246,17 @@ class TestEndToEndPipeline:
         initial_quality = trainer.evaluate_sample_quality(data, 100)
 
         # Train model
-        metrics = trainer.train(data, verbose=False)
+        _ = trainer.train(data, verbose=False)
 
         # Evaluate after training
         final_quality = trainer.evaluate_sample_quality(data, 100)
 
         # Quality should improve or at least not get much worse
         # (Perfect quality improvement is not guaranteed due to stochasticity)
-        print(f"Initial mean error: {initial_quality['mean_error']:.4f}")
-        print(f"Final mean error: {final_quality['mean_error']:.4f}")
-        print(f"Initial std error: {initial_quality['std_error']:.4f}")
-        print(f"Final std error: {final_quality['std_error']:.4f}")
+        print(f"Initial mean error: {initial_quality['mean_error']: .4f}")
+        print(f"Final mean error: {final_quality['mean_error']: .4f}")
+        print(f"Initial std error: {initial_quality['std_error']: .4f}")
+        print(f"Final std error: {final_quality['std_error']: .4f}")
 
         # At minimum, errors should be finite and reasonable
         assert torch.isfinite(torch.tensor(final_quality["mean_error"]))

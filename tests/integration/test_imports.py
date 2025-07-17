@@ -3,12 +3,6 @@
 Test import structure to verify the visualization module imports work correctly.
 """
 
-import os
-import sys
-
-# Add src to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-
 
 def test_basic_imports():
     """Test basic module imports without external dependencies."""
@@ -49,7 +43,7 @@ def test_basic_imports():
                 from config.config import VisualizationConfig
 
                 config = VisualizationConfig()
-                visualizer = DiffusionVisualizer(config)
+                _ = DiffusionVisualizer(config)
                 print("✅ Visualization instantiation works!")
             except ImportError as e:
                 if any(lib in str(e) for lib in ["matplotlib", "torch", "numpy"]):
@@ -81,7 +75,7 @@ def test_training_script_structure():
         print("✅ Training script can import config modules")
 
         # Test that all required modules are at least importable
-        config = ExperimentConfig.default()
+        _ = ExperimentConfig.default()
         print("✅ Can create default configuration")
 
         return True

@@ -94,7 +94,8 @@ class ConfigurationLoader:
 
         if suffix != ".toml":
             raise ValueError(
-                f"Unsupported file format for saving: {suffix}. Only TOML (.toml) files are supported."
+                f"Unsupported file format for saving: {suffix}. "
+                f"Only TOML (.toml) files are supported."
             )
 
         # Convert config to dictionary
@@ -127,7 +128,7 @@ class ConfigurationLoader:
             bool: True if valid, False otherwise
         """
         try:
-            config = ConfigurationLoader.load_toml(config_path)
+            ConfigurationLoader.load_toml(config_path)
             # Validation happens in ExperimentConfig.__post_init__
             return True
         except Exception as e:

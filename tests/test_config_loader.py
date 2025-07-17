@@ -2,23 +2,11 @@
 Tests for configuration loader - External configuration file support.
 """
 
-import os
-import sys
-import tempfile
 from pathlib import Path
-from unittest.mock import mock_open
 
 import pytest
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
-from config.config import (
-    DataConfig,
-    ExperimentConfig,
-    ModelConfig,
-    TrainingConfig,
-    VisualizationConfig,
-)
+from config.config import ExperimentConfig
 from config.config_loader import ConfigurationLoader
 
 
@@ -193,88 +181,8 @@ n_samples = 100
         assert isinstance(loaded_config, ExperimentConfig)
 
 
-class TestConfigurationHelper:
-    """Test cases for ConfigurationHelper."""
-
-    def test_compare_configs(self):
-        """Test configuration comparison."""
-        config1 = ExperimentConfig.default()
-
-        # Create modified config
-        config2 = ExperimentConfig.default()
-        config2.data.n_data_points = 500
-        config2.training.n_epochs = 100
-
-        differences = ConfigurationHelper.compare_configs(config1, config2)
-
-        assert "data" in differences
-        assert "training" in differences
-        assert "n_data_points" in differences["data"]
-        assert "n_epochs" in differences["training"]
-
-        # Check difference values
-        assert differences["data"]["n_data_points"]["config1"] == 2000
-        assert differences["data"]["n_data_points"]["config2"] == 500
-        assert differences["training"]["n_epochs"]["config1"] == 7000
-        assert differences["training"]["n_epochs"]["config2"] == 100
-
-    def test_compare_identical_configs(self):
-        """Test comparison of identical configurations."""
-        config1 = ExperimentConfig.default()
-        config2 = ExperimentConfig.default()
-
-        differences = ConfigurationHelper.compare_configs(config1, config2)
-
-        assert differences == {}
-
-    def test_print_env_variables(self, capsys):
-        """Test printing environment variables."""
-        ConfigurationHelper.print_env_variables()
-
-        captured = capsys.readouterr()
-        output = captured.out
-
-        # Check that sections are printed
-        assert "DATA" in output
-        assert "MODEL" in output
-        assert "TRAINING" in output
-        assert "VISUALIZATION" in output
-
-        # Check that some specific variables are mentioned
-        assert "DIFFUSION_DATA_N_DATA_POINTS" in output
-        assert "DIFFUSION_TRAINING_N_EPOCHS" in output
-
-    def test_print_env_variables_custom_prefix(self, capsys):
-        """Test printing environment variables with custom prefix."""
-        ConfigurationHelper.print_env_variables(env_prefix="CUSTOM")
-
-        captured = capsys.readouterr()
-        output = captured.out
-
-        assert "CUSTOM_DATA_N_DATA_POINTS" in output
-        assert "CUSTOM_TRAINING_N_EPOCHS" in output
-
-    def test_create_example_configs(self, temp_dir):
-        """Test creating example configuration files."""
-        original_cwd = os.getcwd()
-
-        try:
-            # Change to temp directory
-            os.chdir(temp_dir)
-
-            ConfigurationHelper.create_example_configs()
-
-            # Check that TOML file was created
-            etc_dir = Path("etc")
-            assert etc_dir.exists()
-            assert (etc_dir / "default_config.toml").exists()
-
-            # Verify it's loadable
-            config = ConfigurationLoader.load_toml(etc_dir / "default_config.toml")
-            assert isinstance(config, ExperimentConfig)
-
-        finally:
-            os.chdir(original_cwd)
+# ConfigurationHelper was removed from the toy project as it was over-engineered
+# for a simple demonstration. Environment variable support was also removed.
 
 
 class TestConfigurationIntegration:

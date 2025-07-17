@@ -2,14 +2,8 @@
 Tests for data module - Data generation and management.
 """
 
-import os
-import sys
-
 import numpy as np
-import pytest
 import torch
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from data.data_interface import DataGeneratorInterface
 from data.swiss_roll_generator import SwissRollGenerator

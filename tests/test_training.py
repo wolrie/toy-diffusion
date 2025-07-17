@@ -2,15 +2,9 @@
 Tests for training module - Training orchestration and metrics.
 """
 
-import os
-import sys
-from unittest.mock import MagicMock, Mock, patch
-
 import pytest
 import torch
 import torch.optim as optim
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from config.config import TrainingConfig
 from domain.diffusion_model import DiffusionModel

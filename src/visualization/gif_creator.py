@@ -218,7 +218,7 @@ class GifCreator:
         anim.save(str(output_path), writer="pillow", fps=self.fps, dpi=self.dpi)
         plt.close(fig)
 
-        print(f"Side-by-side GIF saved successfully!")
+        print("Side-by-side GIF saved successfully!")
         return output_path
 
     def create_progression_gif(
@@ -326,7 +326,7 @@ class GifCreator:
         anim.save(str(output_path), writer="pillow", fps=self.fps, dpi=self.dpi)
         plt.close(fig)
 
-        print(f"Progression GIF saved successfully!")
+        print("Progression GIF saved successfully!")
         return output_path
 
     def set_style(self, style_dict: dict) -> None:

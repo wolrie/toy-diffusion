@@ -3,17 +3,12 @@ Tests for scripts - Command-line tools and training scripts.
 """
 
 import json
-import os
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
-# Add src to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 
 class TestConfigStructure:

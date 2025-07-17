@@ -2,13 +2,7 @@
 Tests for config module - Configuration management and validation.
 """
 
-import os
-import sys
-from dataclasses import FrozenInstanceError
-
 import pytest
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from config.config import (
     DataConfig,
@@ -20,7 +14,6 @@ from config.config import (
     VisualizationGeneralConfig,
     VisualizationGifConfig,
     VisualizationProgressionConfig,
-    n,
 )
 
 

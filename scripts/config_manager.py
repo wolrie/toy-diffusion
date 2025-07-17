@@ -9,14 +9,10 @@ Usage:
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
-from config import ConfigurationHelper, ConfigurationLoader, ExperimentConfig
+from config import ConfigurationLoader, ExperimentConfig
 
 
 def create_config(output_path: str, config_type: str = "default"):
@@ -103,21 +99,13 @@ def convert_config(input_path: str, output_path: str):
 def compare_configs(config1_path: str, config2_path: str):
     """Compare two configuration files."""
     try:
-        config1 = ConfigurationLoader.load_toml(config1_path)
-        config2 = ConfigurationLoader.load_toml(config2_path)
+        ConfigurationLoader.load_toml(config1_path)
+        ConfigurationLoader.load_toml(config2_path)
 
-        differences = ConfigurationHelper.compare_configs(config1, config2)
-
-        if not differences:
-            print("✅ Configurations are identical")
-        else:
-            print("📊 Configuration differences:")
-            for section, diffs in differences.items():
-                print(f"\n[{section.upper()}]")
-                for field, values in diffs.items():
-                    print(f"  {field}: ")
-                    print(f"    {config1_path}: {values['config1']}")
-                    print(f"    {config2_path}: {values['config2']}")
+        print("📊 Configuration comparison:")
+        print(f"  Config 1: {config1_path}")
+        print(f"  Config 2: {config2_path}")
+        print("  Note: Detailed comparison not available (ConfigurationHelper removed)")
 
         return True
 
@@ -128,7 +116,9 @@ def compare_configs(config1_path: str, config2_path: str):
 
 def print_env_variables():
     """Print available environment variables."""
-    ConfigurationHelper.print_env_variables()
+    print("📋 Environment variables:")
+    print("  Note: Environment variable support was removed from this toy project")
+    print("  All configuration is now done via TOML files")
 
 
 def show_examples():

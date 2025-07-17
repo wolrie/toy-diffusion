@@ -67,7 +67,7 @@ def test_config_imports():
 
         print("✅ Config imports work")
 
-        config = ExperimentConfig.default()
+        _ = ExperimentConfig.default()
         print("✅ Can create default config")
 
         return True
