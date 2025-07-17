@@ -1,6 +1,4 @@
-"""
-Configuration Management - Centralized configuration following Single Responsibility Principle.
-"""
+"""Configuration Management"""
 
 from dataclasses import dataclass
 from typing import Optional
@@ -96,7 +94,7 @@ class OutputConfig:
     save_model: bool = False
     save_config: bool = False
     experiment_name: Optional[str] = None
-    output_dir: str = "."
+    output_dir: str = "outputs"
 
 
 @dataclass

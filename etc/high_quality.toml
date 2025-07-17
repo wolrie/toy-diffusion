@@ -59,4 +59,4 @@ save_config = true
 experiment_name = ""
 
 # Output directory
-output_dir = "."
+output_dir = "outputs"
