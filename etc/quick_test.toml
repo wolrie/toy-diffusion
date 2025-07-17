@@ -1,0 +1,62 @@
+# Quick Test Configuration (TOML format)
+# Minimal configuration for fast testing and development
+
+[data]
+n_data_points = 100
+noise_level = 0.1
+random_state = 42
+
+[model]
+timesteps = 10
+beta_min = 0.001
+beta_max = 0.02
+hidden_dim = 64
+
+[training]
+n_epochs = 50
+learning_rate = 0.01
+batch_size = 16
+scheduler_type = "cosine"
+scheduler_eta_min = 0.0001
+
+[visualization.general]
+n_samples = 100
+n_trajectory_samples = 50
+create_visualizations = true
+
+[visualization.gif]
+create_gif = true
+n_frames = 10
+fps = 8
+gif_type = "standard"
+
+[visualization.progression]
+create_progression_strip = true
+frames = 5
+
+[visualization.display]
+figure_dpi = 100
+
+[execution]
+# Device to use for training: 'cpu', 'cuda', 'auto'
+device = "auto"
+
+# Verbose output (detailed information)
+verbose = false
+
+# Quiet output (minimal information)
+quiet = false
+
+
+[output]
+# Save trained model
+save_model = false
+
+# Save final configuration
+save_config = false
+
+# Experiment name (for output files)
+experiment_name = ""
+
+# Output directory
+output_dir = "."

@@ -1,0 +1,97 @@
+# Diffusion Model Configuration (TOML format)
+# This file contains all configuration parameters for training a diffusion model
+
+[data]
+# Number of data points to generate for training
+n_data_points = 2000
+
+# Noise level for data generation (0.0 = no noise, higher = more noise)
+noise_level = 0.05
+
+# Random seed for reproducible data generation
+random_state = 42
+
+[model]
+# Number of diffusion timesteps
+timesteps = 100
+
+# Noise schedule parameters (beta_min < beta_max)
+beta_min = 0.0004
+beta_max = 0.04
+
+# Hidden dimension for neural network
+hidden_dim = 256
+
+[training]
+# Number of training epochs
+n_epochs = 7000
+
+# Learning rate for optimizer
+learning_rate = 0.001
+
+# Batch size for training
+batch_size = 128
+
+# Learning rate scheduler type ('cosine' or 'step')
+scheduler_type = "cosine"
+
+# Minimum learning rate for scheduler
+scheduler_eta_min = 0.00001
+
+[visualization.general]
+# Number of samples to generate for visualization
+n_samples = 2000
+
+# Number of samples for trajectory visualization
+n_trajectory_samples = 300
+
+# Enable/disable visualization creation
+create_visualizations = true
+
+[visualization.gif]
+# Enable/disable GIF creation
+create_gif = true
+
+# Number of frames in GIF animation
+n_frames = 40
+
+# Frames per second for GIF animation
+fps = 8
+
+# GIF type: 'standard', 'side_by_side', 'progression'
+gif_type = "standard"
+
+[visualization.progression]
+# Enable/disable progression strip creation
+create_progression_strip = true
+
+# Number of frames for progression strip
+frames = 5
+
+[visualization.display]
+# DPI for saved figures
+figure_dpi = 150
+
+[execution]
+# Device to use for training: 'cpu', 'cuda', 'auto'
+device = "auto"
+
+# Verbose output (detailed information)
+verbose = false
+
+# Quiet output (minimal information)
+quiet = false
+
+
+[output]
+# Save trained model
+save_model = false
+
+# Save final configuration
+save_config = false
+
+# Experiment name (for output files)
+experiment_name = ""
+
+# Output directory
+output_dir = "."
