@@ -7,9 +7,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
-from config.config import TrainingConfig
 from domain.diffusion_model import DiffusionModel
 
+from .config import TrainingConfig
 from .scheduler_factory import SchedulerFactory
 
 

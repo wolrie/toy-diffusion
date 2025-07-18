@@ -29,7 +29,7 @@ except ImportError:
 
 
 class ConfigurationLoader:
-    """Configuration loader supporting multiple formats."""
+    """Configuration loader."""
 
     @staticmethod
     def load_toml(config_path: Union[str, Path]) -> ExperimentConfig:
@@ -45,10 +45,8 @@ class ConfigurationLoader:
             FileNotFoundError: If config file doesn"t exist
         """
         config_path = Path(config_path)
-
         if not config_path.exists():
             raise FileNotFoundError(f"Configuration file not found: {config_path}")
-
         with open(config_path, "rb") as f:
             data = tomllib.load(f)
         return ConfigurationLoader._dict_to_config(data)
@@ -56,11 +54,9 @@ class ConfigurationLoader:
     @staticmethod
     def _dict_to_config(data: Dict[str, Any]) -> ExperimentConfig:
         """Convert dictionary to ExperimentConfig."""
-        # Extract nested configurations
         data_config = DataConfig(**data.get("data", {}))
         model_config = ModelConfig(**data.get("model", {}))
         training_config = TrainingConfig(**data.get("training", {}))
-        # Handle nested visualization configuration
         viz_data = data.get("visualization", {})
         visualization_config = VisualizationConfig(
             general=VisualizationGeneralConfig(**viz_data.get("general", {})),
@@ -70,7 +66,6 @@ class ConfigurationLoader:
         )
         execution_config = ExecutionConfig(**data.get("execution", {}))
         output_config = OutputConfig(**data.get("output", {}))
-
         return ExperimentConfig(
             data=data_config,
             model=model_config,

@@ -1,14 +1,18 @@
 """Scheduler Factory - Creates learning rate schedulers."""
 
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Union
 
 import torch
+
+from .enums import SchedulerType
+
+KeyType = Union[str, SchedulerType]
 
 
 class SchedulerFactory:
     """Factory for creating learning rate schedulers."""
 
-    _schedulers: Dict[str, Callable] = {}
+    _schedulers: Dict[KeyType, Callable] = {}
 
     @classmethod
     def register_scheduler(cls, name: str, scheduler_fn: Callable) -> None:
@@ -50,5 +54,5 @@ def _create_step_scheduler(
 
 
 # Register schedulers
-SchedulerFactory.register_scheduler("cosine", _create_cosine_scheduler)
-SchedulerFactory.register_scheduler("step", _create_step_scheduler)
+SchedulerFactory.register_scheduler(SchedulerType.COSINE, _create_cosine_scheduler)
+SchedulerFactory.register_scheduler(SchedulerType.STEP, _create_step_scheduler)

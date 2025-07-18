@@ -5,40 +5,12 @@ from typing import Any, Dict, List, Optional
 
 import torch
 
-from config.config import VisualizationConfig
 from training.trainer import TrainingMetrics
 
+from .config import VisualizationConfig
+from .enums import GifType
 from .gif_creator import GifCreator
 from .plot_manager import PlotManager
-
-# Import modules with fallback for different execution contexts
-# import sys
-# import os
-
-# Add parent directory to path if needed
-# current_dir = os.path.dirname(__file__)
-# parent_dir = os.path.dirname(current_dir)
-# if parent_dir not in sys.path:
-#     sys.path.insert(0, parent_dir)
-
-
-# try:
-#     from visualization.plot_manager import PlotManager
-#     from visualization.gif_creator import GifCreator
-# except ImportError:
-#     try:
-#         from .plot_manager import PlotManager
-#         from .gif_creator import GifCreator
-#         from ..training.trainer import TrainingMetrics
-#         from ..config.config import VisualizationConfig
-#     except ImportError:
-#         # Last resort - add src directory
-#         src_dir = os.path.dirname(os.path.dirname(__file__))
-#         sys.path.insert(0, src_dir)
-#         from visualization.plot_manager import PlotManager
-#         from visualization.gif_creator import GifCreator
-#         from training.trainer import TrainingMetrics
-#         from config.config import VisualizationConfig
 
 
 class DiffusionVisualizer:
@@ -171,21 +143,21 @@ class DiffusionVisualizer:
 
         print(f"🎬 Creating {gif_type} denoising GIF...")
 
-        if gif_type == "standard":
+        if gif_type == GifType.STANDARD:
             return self.gif_creator.create_trajectory_gif(
                 trajectory,
                 original_data,
                 gif_path,
                 n_frames=self.config.gif.n_frames,
             )
-        elif gif_type == "side_by_side":
+        elif gif_type == GifType.SIDE_BY_SIDE:
             return self.gif_creator.create_side_by_side_gif(
                 trajectory,
                 original_data,
                 gif_path,
                 n_frames=self.config.gif.n_frames,
             )
-        elif gif_type == "progression":
+        elif gif_type == GifType.PROGRESSION:
             return self.gif_creator.create_progression_gif(
                 trajectory,
                 original_data,
