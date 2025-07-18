@@ -1,6 +1,13 @@
 # Diffusion Model Configuration (TOML format)
 # This file contains all configuration parameters for training a diffusion model
 
+[logging]
+# Logging configuration ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
+level = "INFO"
+log_file = ""  # Empty string means no file logging
+use_json_format = false
+enable_console = true
+
 [data]
 # Number of data points to generate for training
 n_data_points = 2000

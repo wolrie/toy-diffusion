@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
 from domain.diffusion_model import DiffusionModel
+from logger import LoggerInterface, get_logger
 
 from .config import TrainingConfig
 from .scheduler_factory import SchedulerFactory
@@ -41,6 +42,7 @@ class DiffusionTrainer:
         self.optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
         self.scheduler = self._create_scheduler()
         self.metrics = TrainingMetrics()
+        self.logger: LoggerInterface = get_logger("trainer")
 
     def _create_scheduler(self) -> torch.optim.lr_scheduler._LRScheduler:
         """Create learning rate scheduler using factory."""
@@ -61,6 +63,8 @@ class DiffusionTrainer:
         Returns:
             TrainingMetrics: Training metrics
         """
+        self.logger.info("Starting training with %d epochs", self.config.n_epochs)
+
         dataloader = DataLoader(
             TensorDataset(data),
             batch_size=self.config.batch_size,
@@ -83,6 +87,10 @@ class DiffusionTrainer:
             current_lr = self.scheduler.get_last_lr()[0]
             self.metrics.add_epoch_metrics(epoch_loss, current_lr)
 
+            # Log training progress
+            if epoch % 500 == 0:
+                self.logger.info("Epoch %d: loss=%.4f, lr=%.6f", epoch, epoch_loss, current_lr)
+
             # Update progress bar
             if verbose and epoch % 500 == 0:
                 if hasattr(iterator, "set_postfix"):
@@ -92,9 +100,8 @@ class DiffusionTrainer:
                             "lr": f"{current_lr:.6f}",
                         }
                     )
-                else:
-                    print(f"Epoch {epoch}: Loss = {epoch_loss:.4f}, LR = {current_lr:.6f}")
 
+        self.logger.info("Training completed. Final loss: %.4f", self.metrics.get_final_loss())
         return self.metrics
 
     def _train_epoch(self, dataloader: DataLoader) -> float:

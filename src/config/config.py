@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 from data.config import DataConfig
 from domain.config import ModelConfig
+from logger.logging import LogLevel
 from training.config import TrainingConfig
 from training.enums import DeviceType
 from visualization.config import (
@@ -18,6 +20,30 @@ from visualization.config import (
 )
 
 from .base import Config
+
+
+@dataclass
+class LoggingConfig(Config):
+    """Logging configuration."""
+
+    level: LogLevel = LogLevel.INFO
+    log_file: Optional[Path] = None
+    use_json_format: bool = False
+    enable_console: bool = True
+
+    def validate(self) -> None:
+        """Validate logging configuration settings."""
+        if isinstance(self.level, str):
+            try:
+                self.level = LogLevel(self.level)
+            except ValueError:
+                raise ValueError(f"Log level must be one of {[e.value for e in LogLevel]}")
+        if not isinstance(self.use_json_format, bool):
+            raise ValueError("Use JSON format must be a boolean value")
+        if not isinstance(self.enable_console, bool):
+            raise ValueError("Enable console must be a boolean value")
+        if isinstance(self.log_file, str):
+            self.log_file = Path(self.log_file) if self.log_file else None
 
 
 @dataclass
@@ -74,6 +100,7 @@ class ExperimentConfig(Config):
     visualization: VisualizationConfig
     execution: ExecutionConfig
     output: OutputConfig
+    logging: LoggingConfig
 
     @classmethod
     def default(cls) -> ExperimentConfig:
@@ -90,6 +117,7 @@ class ExperimentConfig(Config):
             ),
             execution=ExecutionConfig(),
             output=OutputConfig(),
+            logging=LoggingConfig(),
         )
 
     def validate(self) -> None:
@@ -100,3 +128,4 @@ class ExperimentConfig(Config):
         self.visualization.validate()
         self.execution.validate()
         self.output.validate()
+        self.logging.validate()

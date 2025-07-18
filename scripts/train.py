@@ -24,6 +24,7 @@ import torch
 from config import ConfigurationLoader, ExperimentConfig
 from data import SwissRollGenerator
 from domain import DiffusionModel, LinearNoiseScheduler
+from logger import LoggerInterface, configure_logging, get_logger
 from training import DiffusionTrainer, enums
 from visualization import DiffusionVisualizer
 
@@ -54,41 +55,52 @@ Examples:
 
 def load_configuration(args: argparse.Namespace) -> ExperimentConfig:
     """Load configuration from various sources."""
-    print(f"📝 Loading configuration from: {args.config}")
+    logger: LoggerInterface = get_logger("config")
+    logger.info("Loading configuration from: %s", args.config)
     config = ConfigurationLoader.load_toml(args.config)
 
     # Apply minimal CLI overrides
     if args.output:
         config.output.output_dir = args.output
+        logger.info("Override output directory: %s", args.output)
     if args.name:
         config.output.experiment_name = args.name
+        logger.info("Override experiment name: %s", args.name)
 
     return config
 
 
 def setup_device(config: ExperimentConfig) -> torch.device:
     """Setup computation device based on config."""
+    logger: LoggerInterface = get_logger("setup")
+
     if config.execution.device == enums.DeviceType.AUTO:
         device = torch.device(
             enums.DeviceType.CUDA if torch.cuda.is_available() else enums.DeviceType.CPU
         )
+        logger.info("Auto-detected device: %s", device)
     else:
         device = torch.device(config.execution.device)
-    print(f"🖥️  Using device: {device}")
+        logger.info("Using configured device: %s", device)
+
     return device
 
 
 def setup_output_directory(config: ExperimentConfig) -> Path:
     """Setup output directory for results based on config."""
+    logger = get_logger("setup")
+
     if config.output.experiment_name:
         output_path: Path = Path(config.output.output_dir) / config.output.experiment_name
+        logger.info("Using named experiment directory: %s", output_path)
     else:
         # Generate unique name with timestamp
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         output_path = Path(config.output.output_dir) / f"diffusion_experiment_{timestamp}"
+        logger.info("Generated timestamped directory: %s", output_path)
 
     output_path.mkdir(parents=True, exist_ok=True)
-    print(f"📁 Output directory: {output_path}")
+    logger.info("Created output directory: %s", output_path)
     return output_path
 
 
@@ -213,18 +225,26 @@ def save_results(
 def main() -> None:
     """Main training function."""
     # Parse command line arguments
-    print("🚀 Starting diffusion model training...")
-
     args = parse_arguments()
     config = load_configuration(args)
+
+    # Configure logging system
+    configure_logging(
+        level=config.logging.level,
+        log_file=config.logging.log_file,
+        use_json_format=config.logging.use_json_format,
+        enable_console=config.logging.enable_console,
+    )
+
+    logger = get_logger("main")
+    logger.info("Starting diffusion model training")
     print_configuration(config)
 
     output_path = setup_output_directory(config)
     device = setup_device(config)
 
     # Generate data
-    if not config.execution.quiet:
-        print("🎲 Generating Swiss Roll data...")
+    logger.info("Generating Swiss Roll data")
     data_generator = SwissRollGenerator(
         noise_level=config.data.noise_level,
         random_state=config.data.random_state,
@@ -232,11 +252,15 @@ def main() -> None:
     data = data_generator.generate(config.data.n_data_points)
     data = data.to(device)
 
+    logger.info("Generated %d data points", data.shape[0])
+
     if config.execution.verbose:
-        print(f"   Generated {data.shape[0]} data points")
-        print(
-            f"   Data range: X[{data[:, 0].min():.3f}, {data[:, 0].max():.3f}], "
-            f"Y[{data[:, 1].min():.3f}, {data[:, 1].max():.3f}]"
+        logger.debug(
+            "Data range: X[%.3f, %.3f], Y[%.3f, %.3f]",
+            data[:, 0].min(),
+            data[:, 0].max(),
+            data[:, 1].min(),
+            data[:, 1].max(),
         )
 
     # Create model

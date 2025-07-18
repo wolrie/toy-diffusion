@@ -11,6 +11,7 @@ from .config import (
     DataConfig,
     ExecutionConfig,
     ExperimentConfig,
+    LoggingConfig,
     ModelConfig,
     OutputConfig,
     TrainingConfig,
@@ -60,6 +61,7 @@ class ConfigurationLoader:
         )
         execution_config = ExecutionConfig(**data.get("execution", {}))
         output_config = OutputConfig(**data.get("output", {}))
+        logging_config = LoggingConfig(**data.get("logging", {}))
         return ExperimentConfig(
             data=data_config,
             model=model_config,
@@ -67,6 +69,7 @@ class ConfigurationLoader:
             visualization=visualization_config,
             execution=execution_config,
             output=output_config,
+            logging=logging_config,
         )
 
     @staticmethod
