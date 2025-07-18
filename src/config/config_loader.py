@@ -7,6 +7,8 @@ from typing import Any, Dict, Union
 
 import tomli_w
 
+from exceptions import ConfigurationError
+
 from .config import (
     DataConfig,
     ExecutionConfig,
@@ -41,7 +43,7 @@ class ConfigurationLoader:
         """
         config_path = Path(config_path)
         if not config_path.exists():
-            raise FileNotFoundError(f"Configuration file not found: {config_path}")
+            raise ConfigurationError(f"Configuration file not found: {config_path}")
         with open(config_path, "rb") as f:
             data = tomllib.load(f)
         return ConfigurationLoader._dict_to_config(data)
@@ -85,7 +87,7 @@ class ConfigurationLoader:
         suffix = config_path.suffix.lower()
 
         if suffix != ".toml":
-            raise ValueError(
+            raise ConfigurationError(
                 f"Unsupported file format for saving: {suffix}. "
                 f"Only TOML (.toml) files are supported."
             )

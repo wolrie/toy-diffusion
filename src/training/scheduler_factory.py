@@ -4,6 +4,8 @@ from typing import Any, Callable, Dict, Union
 
 import torch
 
+from exceptions import TrainingError
+
 from .enums import SchedulerType
 
 KeyType = Union[str, SchedulerType]
@@ -25,7 +27,7 @@ class SchedulerFactory:
     ) -> torch.optim.lr_scheduler._LRScheduler:
         """Create a scheduler by name."""
         if name not in cls._schedulers:
-            raise ValueError(f"Unknown scheduler type: {name}")
+            raise TrainingError(f"Unknown scheduler type: {name}")
 
         return cls._schedulers[name](optimizer, **kwargs)
 

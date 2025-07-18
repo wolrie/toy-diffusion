@@ -8,6 +8,7 @@ from typing import Optional
 
 from data.config import DataConfig
 from domain.config import ModelConfig
+from exceptions import ConfigurationError
 from logger.logging import LogLevel
 from training.config import TrainingConfig
 from training.enums import DeviceType
@@ -37,11 +38,11 @@ class LoggingConfig(Config):
             try:
                 self.level = LogLevel(self.level)
             except ValueError:
-                raise ValueError(f"Log level must be one of {[e.value for e in LogLevel]}")
+                raise ConfigurationError(f"Log level must be one of {[e.value for e in LogLevel]}")
         if not isinstance(self.use_json_format, bool):
-            raise ValueError("Use JSON format must be a boolean value")
+            raise ConfigurationError("Use JSON format must be a boolean value")
         if not isinstance(self.enable_console, bool):
-            raise ValueError("Enable console must be a boolean value")
+            raise ConfigurationError("Enable console must be a boolean value")
         if isinstance(self.log_file, str):
             self.log_file = Path(self.log_file) if self.log_file else None
 
@@ -60,13 +61,13 @@ class ExecutionConfig(Config):
             try:
                 self.device = DeviceType(self.device)
             except (ValueError, TypeError):
-                raise ValueError(f"Device must be in {list(DeviceType)}")
+                raise ConfigurationError(f"Device must be in {list(DeviceType)}")
         if not isinstance(self.verbose, bool):
-            raise ValueError("Verbose must be a boolean value")
+            raise ConfigurationError("Verbose must be a boolean value")
         if not isinstance(self.quiet, bool):
-            raise ValueError("Quiet must be a boolean value")
+            raise ConfigurationError("Quiet must be a boolean value")
         if self.verbose and self.quiet:
-            raise ValueError("Cannot set both verbose and quiet to True")
+            raise ConfigurationError("Cannot set both verbose and quiet to True")
 
 
 @dataclass
@@ -81,13 +82,13 @@ class OutputConfig(Config):
     def validate(self) -> None:
         """Validate output configuration settings."""
         if not isinstance(self.save_model, bool):
-            raise ValueError("Save model must be a boolean value")
+            raise ConfigurationError("Save model must be a boolean value")
         if not isinstance(self.save_config, bool):
-            raise ValueError("Save config must be a boolean value")
+            raise ConfigurationError("Save config must be a boolean value")
         if self.experiment_name and not isinstance(self.experiment_name, str):
-            raise ValueError("Experiment name must be a string")
+            raise ConfigurationError("Experiment name must be a string")
         if not isinstance(self.output_dir, str):
-            raise ValueError("Output directory must be a string")
+            raise ConfigurationError("Output directory must be a string")
 
 
 @dataclass
