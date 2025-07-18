@@ -1,5 +1,6 @@
 """Configuration Loader - Loads config from external files."""
 
+import tomllib
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, Union
@@ -19,13 +20,6 @@ from .config import (
     VisualizationGifConfig,
     VisualizationProgressionConfig,
 )
-
-try:
-    # Python 3.11+ has built-in tomllib
-    import tomllib
-except ImportError:
-    # Python <3.11 needs tomli
-    import tomli as tomllib
 
 
 class ConfigurationLoader:

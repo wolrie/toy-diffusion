@@ -1,9 +1,9 @@
 """Enums for different settings in the training process."""
 
-from enum import Enum
+from enum import StrEnum
 
 
-class DeviceType(str, Enum):
+class DeviceType(StrEnum):
     """Enumeration for different device types."""
 
     AUTO = "auto"
@@ -11,7 +11,7 @@ class DeviceType(str, Enum):
     CUDA = "cuda"
 
 
-class SchedulerType(str, Enum):
+class SchedulerType(StrEnum):
     """Enumeration for different types of schedulers."""
 
     COSINE = "cosine"

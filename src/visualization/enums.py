@@ -1,9 +1,9 @@
 """Enums for different settings during visualization."""
 
-from enum import Enum
+from enum import StrEnum
 
 
-class GifType(Enum):
+class GifType(StrEnum):
     """Enumeration for different types of GIFs."""
 
     STANDARD = "standard"
