@@ -12,20 +12,23 @@ Usage:
         etc/default_config.toml
 """
 
+from __future__ import annotations
+
 import argparse
 import time
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 import torch
 
-from config import ConfigurationLoader
+from config import ConfigurationLoader, ExperimentConfig
 from data import SwissRollGenerator
 from domain import DiffusionModel, LinearNoiseScheduler
-from training import DiffusionTrainer
+from training import DiffusionTrainer, enums
 from visualization import DiffusionVisualizer
 
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="Train a diffusion model with TOML configuration",
@@ -49,7 +52,7 @@ Examples:
     return parser.parse_args()
 
 
-def load_configuration(args):
+def load_configuration(args: argparse.Namespace) -> ExperimentConfig:
     """Load configuration from various sources."""
     print(f"📝 Loading configuration from: {args.config}")
     config = ConfigurationLoader.load_toml(args.config)
@@ -63,20 +66,22 @@ def load_configuration(args):
     return config
 
 
-def setup_device(config):
+def setup_device(config: ExperimentConfig) -> torch.device:
     """Setup computation device based on config."""
-    if config.execution.device == "auto":
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if config.execution.device == enums.DeviceType.AUTO:
+        device = torch.device(
+            enums.DeviceType.CUDA if torch.cuda.is_available() else enums.DeviceType.CPU
+        )
     else:
         device = torch.device(config.execution.device)
     print(f"🖥️  Using device: {device}")
     return device
 
 
-def setup_output_directory(config):
+def setup_output_directory(config: ExperimentConfig) -> Path:
     """Setup output directory for results based on config."""
     if config.output.experiment_name:
-        output_path = Path(config.output.output_dir) / config.output.experiment_name
+        output_path: Path = Path(config.output.output_dir) / config.output.experiment_name
     else:
         # Generate unique name with timestamp
         timestamp = time.strftime("%Y%m%d_%H%M%S")
@@ -87,7 +92,7 @@ def setup_output_directory(config):
     return output_path
 
 
-def print_configuration(config):
+def print_configuration(config: ExperimentConfig) -> None:
     """Print configuration summary based on config verbosity settings."""
     if config.execution.quiet:
         return
@@ -114,7 +119,14 @@ def print_configuration(config):
         )
 
 
-def create_visualizations(data, samples, trajectory, metrics, output_path, config):
+def create_visualizations(
+    data: torch.Tensor,
+    samples: torch.Tensor,
+    trajectory: Optional[List[torch.Tensor]],
+    metrics: Any,
+    output_path: Path,
+    config: ExperimentConfig,
+) -> Dict[str, Any]:
     """Create and save visualizations using the visualization module."""
     if not config.visualization.general.create_visualizations:
         return {}
@@ -125,7 +137,7 @@ def create_visualizations(data, samples, trajectory, metrics, output_path, confi
     visualizer = DiffusionVisualizer(config.visualization)
 
     # Create comprehensive training results
-    results = visualizer.create_training_results(
+    results: Dict[str, Any] = visualizer.create_training_results(
         original_data=data,
         generated_samples=samples,
         trajectory=trajectory,
@@ -164,13 +176,15 @@ def create_visualizations(data, samples, trajectory, metrics, output_path, confi
         except Exception as e:
             print(f"   Skipping progression strip creation: {e}")
 
-    # Note: Quality metrics visualization will be handled in main function
-    # where trainer is available
-
     return results
 
 
-def save_results(model, config, metrics, output_path):
+def save_results(
+    model: DiffusionModel,
+    config: ExperimentConfig,
+    metrics: Any,
+    output_path: Path,
+) -> None:
     """Save training results and artifacts based on config settings."""
     # Save model if requested
     if config.output.save_model:
@@ -196,7 +210,7 @@ def save_results(model, config, metrics, output_path):
     print(f"📈 Metrics saved to: {metrics_path}")
 
 
-def main():
+def main() -> None:
     """Main training function."""
     # Parse command line arguments
     print("🚀 Starting diffusion model training...")
