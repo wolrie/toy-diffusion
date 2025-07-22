@@ -1,0 +1,49 @@
+# Minimal test configuration
+[logging]
+level = "DEBUG"
+log_file = ""
+use_json_format = false
+enable_console = true
+
+[data]
+n_data_points = 10
+noise_level = 0.1
+random_state = 42
+
+[model]
+timesteps = 5
+beta_min = 0.001
+beta_max = 0.02
+hidden_dim = 32
+
+[training]
+n_epochs = 2
+learning_rate = 0.01
+batch_size = 4
+scheduler_type = "cosine"
+scheduler_eta_min = 0.0001
+
+[execution]
+device = "auto"
+verbose = false
+quiet = false
+
+[output]
+save_model = false
+save_config = false
+experiment_name = ""
+output_dir = "test_outputs"
+
+[visualization]
+[visualization.general]
+n_samples = 10
+n_trajectory_samples = 5
+
+[visualization.gif]
+n_frames = 3
+fps = 2
+
+[visualization.progression]
+
+[visualization.display]
+figure_dpi = 100

@@ -1,0 +1,49 @@
+# Production-like test configuration
+[logging]
+level = "INFO"
+log_file = "test_training.log"
+use_json_format = true
+enable_console = true
+
+[data]
+n_data_points = 100
+noise_level = 0.05
+random_state = 42
+
+[model]
+timesteps = 20
+beta_min = 0.0001
+beta_max = 0.04
+hidden_dim = 128
+
+[training]
+n_epochs = 10
+learning_rate = 0.001
+batch_size = 16
+scheduler_type = "cosine"
+scheduler_eta_min = 0.00001
+
+[execution]
+device = "cpu"
+verbose = false
+quiet = false
+
+[output]
+save_model = true
+save_config = true
+experiment_name = "test_experiment"
+output_dir = "test_outputs"
+
+[visualization]
+[visualization.general]
+n_samples = 50
+n_trajectory_samples = 20
+
+[visualization.gif]
+n_frames = 10
+fps = 4
+
+[visualization.progression]
+
+[visualization.display]
+figure_dpi = 150
