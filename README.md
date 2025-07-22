@@ -1,5 +1,7 @@
 # Toy Diffusion
 
+[![Tests](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml/badge.svg)](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml)
+
 TODOs:
 
 * add data assets to be used in github pages (gif, plots, docs/references)
