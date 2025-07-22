@@ -82,12 +82,8 @@ def convert_config(input_path: str, output_path: str):
         return False
 
     try:
-        # Load from input format
         config = ConfigurationLoader.load_toml(input_path)
-
-        # Save to output format
         ConfigurationLoader.save_to_file(config, output_path)
-
         print(f"✅ Converted {input_path} -> {output_path}")
         return True
 

@@ -1,6 +1,4 @@
-"""
-Pytest configuration and shared fixtures.
-"""
+"""Pytest configuration and shared fixtures."""
 
 from pathlib import Path
 from typing import Generator
@@ -8,13 +6,11 @@ from typing import Generator
 import pytest
 import torch
 
-# Import all necessary modules
 from config import ConfigurationLoader, ExperimentConfig
 from data import SwissRollGenerator
 from domain import DiffusionModel, LinearNoiseScheduler
 from training import DiffusionTrainer
 
-# Test assets directory
 ASSETS_DIR = Path(__file__).parent / "assets"
 
 
@@ -85,7 +81,6 @@ def temp_output_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return temp_dir
 
 
-# Custom markers for test organization
 pytestmark = [
     pytest.mark.filterwarnings("ignore::UserWarning"),
     pytest.mark.filterwarnings("ignore::DeprecationWarning"),
