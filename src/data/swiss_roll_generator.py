@@ -1,8 +1,4 @@
-"""
-Swiss Roll Data Generator - Generates Swiss Roll datasets.
-
-Follows Single Responsibility Principle - only handles Swiss Roll data generation.
-"""
+"""Swiss Roll Data Generator - Generates Swiss Roll datasets."""
 
 from typing import Any, Dict
 
@@ -30,8 +26,7 @@ class SwissRollGenerator(DataGeneratorInterface):
         np.random.seed(self.random_state)
 
     def generate(self, n_samples: int, **kwargs: Any) -> torch.Tensor:
-        """
-        Generate Swiss Roll data.
+        """Generate Swiss Roll data.
 
         Args:
             n_samples: Number of samples to generate
@@ -42,6 +37,8 @@ class SwissRollGenerator(DataGeneratorInterface):
         """
         noise_level = kwargs.get("noise_level", self.noise_level)
 
+        self._setup_random_state()
+
         # Generate Swiss Roll using same logic as original
         t = torch.rand(n_samples) * 3 * np.pi + 0.5 * np.pi
 
@@ -49,18 +46,25 @@ class SwissRollGenerator(DataGeneratorInterface):
         x = t * torch.cos(t)
         y = t * torch.sin(t)
 
-        # Normalize to reasonable range
-        x = (x - x.mean()) / x.std() * 0.5
-        y = (y - y.mean()) / y.std() * 0.5
+        # Normalize to reasonable range (avoid division by zero for single samples)
+        if n_samples > 1:
+            x_std = x.std()
+            y_std = y.std()
+            if x_std > 1e-8:  # Avoid division by very small numbers
+                x = (x - x.mean()) / x_std * 0.5
+            if y_std > 1e-8:
+                y = (y - y.mean()) / y_std * 0.5
+        else:
+            # For single sample, just scale reasonably
+            x = x * 0.1
+            y = y * 0.1
 
-        # Add noise
         if noise_level > 0:
             noise_x = torch.randn(n_samples) * noise_level
             noise_y = torch.randn(n_samples) * noise_level
             x += noise_x
             y += noise_y
 
-        # Stack and return
         data = torch.stack([x, y], dim=1)
         return data.float()
 
