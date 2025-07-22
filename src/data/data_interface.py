@@ -1,8 +1,4 @@
-"""
-Data Generator Interface - Defines contract for data generators.
-
-Follows Interface Segregation Principle - clean interface for data generation.
-"""
+"""Data Generator Interface - Defines contract for data generators."""
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict
@@ -11,7 +7,7 @@ import torch
 
 
 class DataGeneratorInterface(ABC):
-    """Interface for data generators following Interface Segregation Principle."""
+    """Interface for data generators."""
 
     @abstractmethod
     def generate(self, n_samples: int, **kwargs: Any) -> torch.Tensor:
