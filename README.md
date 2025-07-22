@@ -1,11 +1,6 @@
 # Toy Diffusion
 
-[![Tests](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml/badge.svg)](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml)
-
-TODOs:
-
-* add data assets to be used in github pages (gif, plots, docs/references)
-* add github pages
+[![Tests](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml/badge.svg)](https://github.com/wolrie/toy-diffusion/actions/workflows/test.yml) [![Deploy GitHub Pages](https://github.com/wolrie/toy-diffusion/actions/workflows/pages.yml/badge.svg)](https://github.com/wolrie/toy-diffusion/actions/workflows/pages.yml)
 
 This repo was written to serve as a starting point for a technical talk on diffusion language models. It contains an minimalistic implementation for a toy diffusion model for 2d data generation. This implementation demonstrates the core concepts of diffusion probabilistic models using a simple 2D Swiss Roll dataset.
 
