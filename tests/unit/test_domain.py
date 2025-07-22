@@ -10,7 +10,7 @@ from domain import DiffusionModel, DiffusionNetwork, LinearNoiseScheduler
 class TestLinearNoiseScheduler:
     """Test noise scheduler functionality."""
 
-    def test_initialization(self):
+    def test_initialization(self) -> None:
         """Test scheduler initialization with different parameters."""
         scheduler = LinearNoiseScheduler(timesteps=100, beta_min=0.001, beta_max=0.02)
 
@@ -23,13 +23,13 @@ class TestLinearNoiseScheduler:
         assert torch.all(scheduler.betas[1:] >= scheduler.betas[:-1])  # Monotonic
 
     @pytest.mark.parametrize("timesteps", [1, 10, 100, 1000])
-    def test_different_timesteps(self, timesteps: int):
+    def test_different_timesteps(self, timesteps: int) -> None:
         """Test scheduler with different timestep values."""
         scheduler = LinearNoiseScheduler(timesteps=timesteps)
         assert scheduler.timesteps == timesteps
         assert scheduler.betas.shape == (timesteps,)
 
-    def test_forward_process(self, noise_scheduler: LinearNoiseScheduler):
+    def test_forward_process(self, noise_scheduler: LinearNoiseScheduler) -> None:
         """Test forward diffusion process."""
         x0 = torch.randn(5, 2)
         t = torch.tensor([0, 1, 2, 3, 4])
@@ -39,7 +39,9 @@ class TestLinearNoiseScheduler:
         assert x_t.shape == x0.shape
         assert torch.isfinite(x_t).all()
 
-    def test_forward_process_with_specific_noise(self, noise_scheduler: LinearNoiseScheduler):
+    def test_forward_process_with_specific_noise(
+        self, noise_scheduler: LinearNoiseScheduler
+    ) -> None:
         """Test forward process with provided noise."""
         x0 = torch.randn(3, 2)
         t = torch.tensor([1, 2, 3])
@@ -50,7 +52,7 @@ class TestLinearNoiseScheduler:
         assert x_t.shape == x0.shape
         assert torch.isfinite(x_t).all()
 
-    def test_posterior_params(self, noise_scheduler: LinearNoiseScheduler):
+    def test_posterior_params(self, noise_scheduler: LinearNoiseScheduler) -> None:
         """Test posterior parameter computation."""
         t = torch.tensor([0, 1, 2, 3, 4])
         params = noise_scheduler.get_posterior_params(t)
@@ -60,7 +62,9 @@ class TestLinearNoiseScheduler:
             assert param.shape[0] == len(t)
             assert torch.isfinite(param).all()
 
-    def test_x0_prediction_accuracy(self, noise_scheduler: LinearNoiseScheduler, seed_random):
+    def test_x0_prediction_accuracy(
+        self, noise_scheduler: LinearNoiseScheduler, seed_random: None
+    ) -> None:
         """Test x0 prediction is accurate."""
         x0 = torch.randn(5, 2)
         t = torch.tensor([1, 2, 3, 4, 5])
@@ -77,7 +81,7 @@ class TestLinearNoiseScheduler:
 class TestDiffusionNetwork:
     """Test neural network component."""
 
-    def test_default_initialization(self):
+    def test_default_initialization(self) -> None:
         """Test network with default parameters."""
         network = DiffusionNetwork()
         assert isinstance(network.network, torch.nn.Sequential)
@@ -90,7 +94,7 @@ class TestDiffusionNetwork:
             (10, 256, 5),
         ],
     )
-    def test_custom_dimensions(self, input_dim: int, hidden_dim: int, output_dim: int):
+    def test_custom_dimensions(self, input_dim: int, hidden_dim: int, output_dim: int) -> None:
         """Test network with custom dimensions."""
         network = DiffusionNetwork(input_dim, hidden_dim, output_dim)
 
@@ -100,7 +104,7 @@ class TestDiffusionNetwork:
         assert output.shape == (10, output_dim)
         assert torch.isfinite(output).all()
 
-    def test_gradient_computation(self):
+    def test_gradient_computation(self) -> None:
         """Test gradients flow through network."""
         network = DiffusionNetwork()
         x = torch.randn(5, 3, requires_grad=True)
@@ -113,7 +117,7 @@ class TestDiffusionNetwork:
         assert torch.isfinite(x.grad).all()
 
     @pytest.mark.parametrize("batch_size", [1, 8, 32])
-    def test_different_batch_sizes(self, batch_size: int):
+    def test_different_batch_sizes(self, batch_size: int) -> None:
         """Test network handles different batch sizes."""
         network = DiffusionNetwork()
         x = torch.randn(batch_size, 3)
@@ -126,7 +130,7 @@ class TestDiffusionNetwork:
 class TestDiffusionModel:
     """Test complete diffusion model."""
 
-    def test_initialization(self, noise_scheduler: LinearNoiseScheduler):
+    def test_initialization(self, noise_scheduler: LinearNoiseScheduler) -> None:
         """Test model initialization."""
         model = DiffusionModel(noise_scheduler)
 
@@ -134,14 +138,14 @@ class TestDiffusionModel:
         assert model.timesteps == noise_scheduler.timesteps
         assert isinstance(model.network, DiffusionNetwork)
 
-    def test_custom_network(self, noise_scheduler: LinearNoiseScheduler):
+    def test_custom_network(self, noise_scheduler: LinearNoiseScheduler) -> None:
         """Test model with custom network."""
         custom_network = DiffusionNetwork(hidden_dim=128)
         model = DiffusionModel(noise_scheduler, custom_network)
 
         assert model.network == custom_network
 
-    def test_noise_prediction(self, diffusion_model: DiffusionModel):
+    def test_noise_prediction(self, diffusion_model: DiffusionModel) -> None:
         """Test noise prediction."""
         x_t = torch.randn(5, 2)
         t = torch.tensor([0, 1, 2, 3, 4])
@@ -151,7 +155,7 @@ class TestDiffusionModel:
         assert predicted_noise.shape == x_t.shape
         assert torch.isfinite(predicted_noise).all()
 
-    def test_reverse_step(self, diffusion_model: DiffusionModel):
+    def test_reverse_step(self, diffusion_model: DiffusionModel) -> None:
         """Test single reverse step."""
         x_t = torch.randn(3, 2)
         t = torch.tensor([1, 2, 3])
@@ -161,7 +165,7 @@ class TestDiffusionModel:
         assert x_prev.shape == x_t.shape
         assert torch.isfinite(x_prev).all()
 
-    def test_reverse_step_final(self, diffusion_model: DiffusionModel):
+    def test_reverse_step_final(self, diffusion_model: DiffusionModel) -> None:
         """Test final reverse step (t=0) has no noise."""
         x_t = torch.randn(3, 2)
         t_zero = torch.tensor([0, 0, 0])
@@ -172,7 +176,9 @@ class TestDiffusionModel:
         assert torch.isfinite(x_final).all()
 
     @pytest.mark.parametrize("n_samples", [1, 5, 10])
-    def test_sampling_without_trajectory(self, diffusion_model: DiffusionModel, n_samples: int):
+    def test_sampling_without_trajectory(
+        self, diffusion_model: DiffusionModel, n_samples: int
+    ) -> None:
         """Test sampling without trajectory."""
         samples, trajectory = diffusion_model.sample(n_samples, return_trajectory=False)
 
@@ -180,7 +186,7 @@ class TestDiffusionModel:
         assert torch.isfinite(samples).all()
         assert trajectory is None
 
-    def test_sampling_with_trajectory(self, diffusion_model: DiffusionModel):
+    def test_sampling_with_trajectory(self, diffusion_model: DiffusionModel) -> None:
         """Test sampling with trajectory."""
         samples, trajectory = diffusion_model.sample(5, return_trajectory=True)
 
@@ -193,7 +199,7 @@ class TestDiffusionModel:
             assert step.shape == (5, 2)
             assert torch.isfinite(step).all()
 
-    def test_loss_computation(self, diffusion_model: DiffusionModel):
+    def test_loss_computation(self, diffusion_model: DiffusionModel) -> None:
         """Test loss computation."""
         x0 = torch.randn(8, 2)
         loss = diffusion_model.compute_loss(x0)
@@ -202,7 +208,7 @@ class TestDiffusionModel:
         assert torch.isfinite(loss)
         assert loss.item() >= 0  # MSE is non-negative
 
-    def test_reproducible_sampling(self, diffusion_model: DiffusionModel):
+    def test_reproducible_sampling(self, diffusion_model: DiffusionModel) -> None:
         """Test sampling reproducibility."""
         torch.manual_seed(42)
         samples1, _ = diffusion_model.sample(10)
@@ -212,7 +218,7 @@ class TestDiffusionModel:
 
         assert torch.allclose(samples1, samples2, atol=1e-6)
 
-    def test_training_eval_modes(self, diffusion_model: DiffusionModel):
+    def test_training_eval_modes(self, diffusion_model: DiffusionModel) -> None:
         """Test model behavior in training vs eval mode."""
         x0 = torch.randn(5, 2)
 

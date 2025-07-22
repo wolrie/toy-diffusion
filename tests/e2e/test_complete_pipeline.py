@@ -18,7 +18,7 @@ from training import DiffusionTrainer
 class TestCompletePipeline:
     """Test complete end-to-end diffusion pipeline."""
 
-    def test_minimal_working_pipeline(self, minimal_config: ExperimentConfig):
+    def test_minimal_working_pipeline(self, minimal_config: ExperimentConfig) -> None:
         """Test minimal working example of complete pipeline."""
         # 1. Data Generation
         data_generator = SwissRollGenerator(
@@ -55,7 +55,9 @@ class TestCompletePipeline:
         assert quality_metrics["mean_error"] >= 0
         assert quality_metrics["std_error"] >= 0
 
-    def test_production_pipeline(self, production_config: ExperimentConfig, temp_output_dir: Path):
+    def test_production_pipeline(
+        self, production_config: ExperimentConfig, temp_output_dir: Path
+    ) -> None:
         """Test production-like pipeline with full configuration."""
         # Configure logging (in real scenario)
         from logger import configure_logging
@@ -91,10 +93,6 @@ class TestCompletePipeline:
         with torch.no_grad():
             samples, _ = model.sample(production_config.visualization.general.n_samples)
 
-        quality_metrics = trainer.evaluate_sample_quality(
-            data, production_config.visualization.general.n_samples
-        )
-
         # Save results (simulate saving)
         if production_config.output.save_config:
             config_save_path = temp_output_dir / "config.toml"
@@ -116,10 +114,12 @@ class TestCompletePipeline:
         assert len(metrics.losses) == production_config.training.n_epochs
         assert metrics.get_final_loss() < float("inf")
 
-    def test_pipeline_reproducibility(self, minimal_config: ExperimentConfig, seed_random):
+    def test_pipeline_reproducibility(
+        self, minimal_config: ExperimentConfig, seed_random: None
+    ) -> None:
         """Test pipeline produces reproducible results."""
 
-        def run_pipeline():
+        def run_pipeline() -> tuple[torch.Tensor, list[float]]:
             torch.manual_seed(42)
 
             data_generator = SwissRollGenerator(random_state=42)
@@ -142,7 +142,7 @@ class TestCompletePipeline:
         assert len(losses1) == len(losses2)
 
     @pytest.mark.slow
-    def test_pipeline_convergence(self, production_config: ExperimentConfig):
+    def test_pipeline_convergence(self, production_config: ExperimentConfig) -> None:
         """Test pipeline shows reasonable convergence behavior."""
         # Use more epochs for convergence test
         production_config.training.n_epochs = 20
@@ -175,7 +175,7 @@ class TestCompletePipeline:
 class TestPipelineRobustness:
     """Test pipeline robustness to various conditions."""
 
-    def test_edge_case_configurations(self):
+    def test_edge_case_configurations(self) -> None:
         """Test pipeline with edge case configurations."""
         edge_configs = [
             # Minimal viable config
@@ -217,7 +217,7 @@ class TestPipelineRobustness:
     @pytest.mark.parametrize("noise_level", [0.0, 0.01, 1.0, 5.0])
     def test_pipeline_with_extreme_noise(
         self, minimal_config: ExperimentConfig, noise_level: float
-    ):
+    ) -> None:
         """Test pipeline handles extreme noise levels."""
         data_generator = SwissRollGenerator(noise_level=noise_level, random_state=42)
         data = data_generator.generate(minimal_config.data.n_data_points)
@@ -232,12 +232,12 @@ class TestPipelineRobustness:
         assert len(metrics.losses) == minimal_config.training.n_epochs
         assert all(torch.isfinite(torch.tensor(loss)) for loss in metrics.losses)
 
-    def test_configuration_validation_in_pipeline(self, invalid_config_path: Path):
+    def test_configuration_validation_in_pipeline(self, invalid_config_path: Path) -> None:
         """Test that invalid configurations are caught in pipeline."""
         with pytest.raises(Exception):
             ConfigurationLoader.load_toml(invalid_config_path)
 
-    def test_basic_memory_cleanup(self, minimal_config: ExperimentConfig):
+    def test_basic_memory_cleanup(self, minimal_config: ExperimentConfig) -> None:
         """Test basic memory cleanup works."""
         import gc
 

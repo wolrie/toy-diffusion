@@ -11,7 +11,7 @@ from exceptions import DataError
 class TestSwissRollGenerator:
     """Test Swiss Roll data generator."""
 
-    def test_default_initialization(self):
+    def test_default_initialization(self) -> None:
         """Test generator with default parameters."""
         generator = SwissRollGenerator()
 
@@ -27,7 +27,7 @@ class TestSwissRollGenerator:
             (1.0, 0),
         ],
     )
-    def test_custom_initialization(self, noise_level: float, random_state: int):
+    def test_custom_initialization(self, noise_level: float, random_state: int) -> None:
         """Test generator with custom parameters."""
         generator = SwissRollGenerator(noise_level=noise_level, random_state=random_state)
 
@@ -35,7 +35,7 @@ class TestSwissRollGenerator:
         assert generator.random_state == random_state
 
     @pytest.mark.parametrize("n_samples", [1, 10, 100, 1000])
-    def test_data_generation_shapes(self, n_samples: int):
+    def test_data_generation_shapes(self, n_samples: int) -> None:
         """Test data generation with different sample counts."""
         generator = SwissRollGenerator(random_state=42)
         data = generator.generate(n_samples)
@@ -46,7 +46,7 @@ class TestSwissRollGenerator:
         finite_check = torch.isfinite(data).all()
         assert finite_check, "Generated data contains non-finite values"
 
-    def test_reproducibility(self):
+    def test_reproducibility(self) -> None:
         """Test data generation is reproducible."""
         generator1 = SwissRollGenerator(random_state=42)
         generator2 = SwissRollGenerator(random_state=42)
@@ -57,7 +57,7 @@ class TestSwissRollGenerator:
         # Use a more reasonable tolerance for reproducibility
         assert torch.allclose(data1, data2, atol=1e-5)
 
-    def test_different_seeds_produce_different_data(self):
+    def test_different_seeds_produce_different_data(self) -> None:
         """Test different seeds produce different data."""
         generator1 = SwissRollGenerator(random_state=42)
         generator2 = SwissRollGenerator(random_state=123)
@@ -68,7 +68,7 @@ class TestSwissRollGenerator:
         assert not torch.allclose(data1, data2, atol=1e-3)
 
     @pytest.mark.parametrize("noise_level", [0.0, 0.01, 0.1, 0.5, 1.0])
-    def test_noise_levels(self, noise_level: float):
+    def test_noise_levels(self, noise_level: float) -> None:
         """Test different noise levels."""
         generator = SwissRollGenerator(noise_level=noise_level, random_state=42)
         data = generator.generate(100)
@@ -76,7 +76,7 @@ class TestSwissRollGenerator:
         assert torch.isfinite(data).all()
         assert data.shape == (100, 2)
 
-    def test_extreme_noise_levels(self):
+    def test_extreme_noise_levels(self) -> None:
         """Test extreme noise levels."""
         # Very high noise
         generator = SwissRollGenerator(noise_level=10.0, random_state=42)
@@ -92,7 +92,7 @@ class TestSwissRollGenerator:
         assert torch.isfinite(data_no_noise).all()
         assert data_no_noise.shape == (50, 2)
 
-    def test_data_info(self):
+    def test_data_info(self) -> None:
         """Test data info method returns correct information."""
         generator = SwissRollGenerator(noise_level=0.15, random_state=123)
         info = generator.get_data_info()
@@ -105,7 +105,7 @@ class TestSwissRollGenerator:
         assert "description" in info
         assert isinstance(info["description"], str)
 
-    def test_data_range_reasonable(self):
+    def test_data_range_reasonable(self) -> None:
         """Test generated data is in reasonable range."""
         generator = SwissRollGenerator(noise_level=0.1, random_state=42)
         data = generator.generate(100)
@@ -118,7 +118,7 @@ class TestSwissRollGenerator:
         assert std.min() > 0.1  # Has some spread
         assert std.max() < 10.0  # Not too spread out
 
-    def test_noise_override_in_generate(self):
+    def test_noise_override_in_generate(self) -> None:
         """Test noise level can be overridden in generate method."""
         generator = SwissRollGenerator(noise_level=0.1, random_state=42)
 
@@ -130,7 +130,7 @@ class TestSwissRollGenerator:
         assert torch.isfinite(data2).all()
         assert not torch.allclose(data1, data2, atol=0.1)
 
-    def test_data_distribution_properties(self):
+    def test_data_distribution_properties(self) -> None:
         """Test statistical properties of generated data."""
         generator = SwissRollGenerator(noise_level=0.05, random_state=42)
         data = generator.generate(1000)  # Large sample for statistics

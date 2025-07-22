@@ -18,7 +18,7 @@ class TestTrainingIntegration:
 
     def test_trainer_initialization(
         self, diffusion_model: DiffusionModel, minimal_config: ExperimentConfig
-    ):
+    ) -> None:
         """Test trainer initializes properly with model and config."""
         trainer = DiffusionTrainer(diffusion_model, minimal_config.training)
 
@@ -28,7 +28,9 @@ class TestTrainingIntegration:
         assert trainer.scheduler is not None
         assert isinstance(trainer.metrics, TrainingMetrics)
 
-    def test_training_reduces_loss(self, trainer: DiffusionTrainer, swiss_roll_data: torch.Tensor):
+    def test_training_reduces_loss(
+        self, trainer: DiffusionTrainer, swiss_roll_data: torch.Tensor
+    ) -> None:
         """Test that training generally reduces loss over time."""
         metrics = trainer.train(swiss_roll_data, verbose=False)
 
@@ -38,7 +40,6 @@ class TestTrainingIntegration:
 
         # Loss should improve (or at least not get much worse)
         initial_loss = metrics.losses[0]
-        final_loss = metrics.get_final_loss()
         min_loss = min(metrics.losses)
 
         # At least the minimum should be better than or equal to initial
@@ -46,7 +47,7 @@ class TestTrainingIntegration:
 
     def test_training_metrics_consistency(
         self, trainer: DiffusionTrainer, swiss_roll_data: torch.Tensor
-    ):
+    ) -> None:
         """Test training metrics are consistent."""
         metrics = trainer.train(swiss_roll_data, verbose=False)
 
@@ -59,7 +60,7 @@ class TestTrainingIntegration:
 
     def test_model_parameters_update(
         self, trainer: DiffusionTrainer, swiss_roll_data: torch.Tensor
-    ):
+    ) -> None:
         """Test that model parameters are updated during training."""
         # Store initial parameters
         initial_params = [p.clone() for p in trainer.model.parameters()]
@@ -80,7 +81,7 @@ class TestTrainingIntegration:
     @pytest.mark.parametrize("batch_size", [1, 4, 16])
     def test_training_with_different_batch_sizes(
         self, minimal_config: ExperimentConfig, batch_size: int
-    ):
+    ) -> None:
         """Test training works with different batch sizes."""
         # Create trainer with custom batch size
         minimal_config.training.batch_size = batch_size
@@ -101,7 +102,7 @@ class TestTrainingIntegration:
 
     def test_sample_quality_evaluation(
         self, trainer: DiffusionTrainer, swiss_roll_data: torch.Tensor
-    ):
+    ) -> None:
         """Test sample quality evaluation."""
         # Train briefly
         trainer.train(swiss_roll_data, verbose=False)
@@ -125,7 +126,9 @@ class TestTrainingScheduler:
     """Test training with different schedulers."""
 
     @pytest.mark.parametrize("scheduler_type", ["cosine", "step"])
-    def test_different_schedulers(self, minimal_config: ExperimentConfig, scheduler_type: str):
+    def test_different_schedulers(
+        self, minimal_config: ExperimentConfig, scheduler_type: str
+    ) -> None:
         """Test training with different learning rate schedulers."""
         minimal_config.training.scheduler_type = scheduler_type
 
@@ -152,7 +155,7 @@ class TestTrainingScheduler:
 class TestModelDataIntegration:
     """Test integration between model and data components."""
 
-    def test_model_handles_real_data(self, diffusion_model: DiffusionModel):
+    def test_model_handles_real_data(self, diffusion_model: DiffusionModel) -> None:
         """Test model can process real Swiss roll data."""
         generator = SwissRollGenerator(noise_level=0.1, random_state=42)
         data = generator.generate(50)
@@ -168,7 +171,7 @@ class TestModelDataIntegration:
         assert trajectory is not None
         assert len(trajectory) == diffusion_model.timesteps + 1
 
-    def test_data_generator_with_model_training(self, minimal_config: ExperimentConfig):
+    def test_data_generator_with_model_training(self, minimal_config: ExperimentConfig) -> None:
         """Test data generator works seamlessly with model training."""
         # Create components
         generator = SwissRollGenerator(
@@ -197,7 +200,7 @@ class TestModelDataIntegration:
     )
     def test_different_data_and_model_sizes(
         self, data_size: int, timesteps: int, minimal_config: ExperimentConfig
-    ):
+    ) -> None:
         """Test different combinations of data size and model timesteps."""
         # Generate data
         generator = SwissRollGenerator(random_state=42)

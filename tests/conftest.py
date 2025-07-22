@@ -68,7 +68,8 @@ def diffusion_model(noise_scheduler: LinearNoiseScheduler) -> DiffusionModel:
 def swiss_roll_data() -> torch.Tensor:
     """Sample Swiss roll data for testing."""
     generator = SwissRollGenerator(noise_level=0.1, random_state=42)
-    return generator.generate(50)
+    data: torch.Tensor = generator.generate(50)
+    return data
 
 
 @pytest.fixture
@@ -78,9 +79,10 @@ def trainer(diffusion_model: DiffusionModel, minimal_config: ExperimentConfig) -
 
 
 @pytest.fixture(scope="session")
-def temp_output_dir(tmp_path_factory) -> Path:
+def temp_output_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Temporary directory for test outputs."""
-    return tmp_path_factory.mktemp("diffusion_test_outputs")
+    temp_dir: Path = tmp_path_factory.mktemp("diffusion_test_outputs")
+    return temp_dir
 
 
 # Custom markers for test organization
