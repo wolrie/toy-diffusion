@@ -29,7 +29,10 @@ class SchedulerFactory:
         if name not in cls._schedulers:
             raise TrainingError(f"Unknown scheduler type: {name}")
 
-        return cls._schedulers[name](optimizer, **kwargs)
+        scheduler: torch.optim.lr_scheduler._LRScheduler = cls._schedulers[name](
+            optimizer, **kwargs
+        )
+        return scheduler
 
 
 # Register default schedulers

@@ -24,7 +24,8 @@ class DiffusionNetwork(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.network(x)
+        output: torch.Tensor = self.network(x)
+        return output
 
 
 class DiffusionModel(nn.Module):
@@ -45,7 +46,8 @@ class DiffusionModel(nn.Module):
         """Predict noise that was added to create x_t."""
         t_normalized = t.float() / self.timesteps
         network_input = torch.cat([x_t, t_normalized.unsqueeze(1)], dim=1)
-        return self.network(network_input)
+        predicted_noise: torch.Tensor = self.network(network_input)
+        return predicted_noise
 
     def reverse_step(self, x_t: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
         """Single reverse diffusion step."""
