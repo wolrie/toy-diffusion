@@ -1,0 +1,46 @@
+title: "Toy Diffusion"
+description: "Understanding diffusion models through a simple 2D example"
+url: "https://wolrie.github.io"
+baseurl: "/toy-diffusion"
+
+# Theme
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Navigation
+header_pages:
+  - index.md
+  - references.md
+
+# Settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  syntax_highlighter: rouge
+  input: GFM
+
+# Collections
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+# Exclude files
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - .gitignore
+
+# Social
+github_username: wolrie
+repository: wolrie/toy-diffusion
+
+# Google Analytics (if needed)
+# google_analytics: UA-XXXXXXXX-X
+
+# Custom variables
+show_downloads: true
+show_navigation: true
