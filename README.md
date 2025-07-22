@@ -1,15 +1,37 @@
 # Toy Diffusion
 
-An implementation of a toy diffusion model for 2D data generation by example.
-
 TODOs:
 
-* drop scripts/config_manager.py
-* add/update README
 * add data assets to be used in github pages (gif, plots, docs/references)
 * add github pages
 
-## Architecture
+This repo was written to serve as a starting point for a technical talk on diffusion language models. It contains an minimalistic implementation for a toy diffusion model for 2d data generation. This implementation demonstrates the core concepts of diffusion probabilistic models using a simple 2D Swiss Roll dataset.
+
+The idea for this implementation was spawned by two papers (see [docs/references.md](docs/references.md) for more info and links):
+
+- **Forward/reverse diffusion framework**: Based on Sohl-Dickstein et al. (2015) - the original thermodynamics-inspired approach. The swiss roll dataset was also used there.
+- **DDPM training algorithm**: Follows Ho et al. (2020) - the practical denoising objective and simplified training procedure.
+
+This toy implementation follows the DDPM framework from Ho et al. (2020), specifically:
+
+- **Noise Scheduling:** Linear beta scheduling as described in the DDPM paper
+- **Loss Function:** Simplified denoising objective (MSE between predicted and actual noise)
+- **Reverse Process:** Single-step denoising with learned noise prediction
+- **Architecture:** Simple MLP network suitable for 2D data (Swiss Roll manifold)
+
+## Table of Contents
+
+1. [Architecture](#1-architecture)
+1. [Setup](#2-setup)
+1. [Usage](#3-usage)
+1. [Configuration](#4-configuration)
+1. [Output](#5-output)
+1. [Development](#6-development)
+1. [References](#7-references)
+
+---
+
+## 1. Architecture
 
 ```
 toy-diffusion/
@@ -28,21 +50,14 @@ toy-diffusion/
 └── outputs/            # Generated results and visualizations
 ```
 
-## Features
+## 2. Setup
 
-- **Clean Architecture**: Follows SOLID principles with clear separation of concerns
-- **Swiss Roll Dataset**: Generates and learns from 2D Swiss Roll manifold data
-- **DDPM Algorithm**: Implements Denoising Diffusion Probabilistic Models
-- **Type Safety**: Full type annotations and comprehensive testing
-- **Structured Logging**: JSON-based logging with configurable output
-- **Configuration Management**: TOML-based configuration with validation
-
-## Requirements
+### 2.1 Requirements
 
 - Python ≥3.11
 - [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
-## Installation
+### 2.1 Installation
 
 ```bash
 
@@ -53,9 +68,9 @@ uv sync [--extra=dev]
 pip install -e ".[dev]"
 ```
 
-## Usage
+## 3. Usage
 
-### Training
+### 3.1 Training
 
 ```bash
 # Train with default settings
@@ -68,7 +83,7 @@ python scripts/train.py --config etc/custom.toml
 python scripts/train.py --config etc/quick_test.toml
 ```
 
-### Python API
+### 3.2 Python API
 
 ```python
 from config import ConfigurationLoader
@@ -93,9 +108,9 @@ metrics = trainer.train(data)
 samples, trajectory = model.sample(100, return_trajectory=True)
 ```
 
-## Configuration
+## 4. Configuration
 
-Configurations are stored in `etc/` as TOML files:
+Configurations are stored in `etc/` as TOML files. Check them for comments and further info.
 
 - `default_config.toml`: Standard settings
 - `quick_test.toml`: Fast configuration for testing
@@ -125,7 +140,7 @@ use_json_format = true
 log_file = "diffusion.log"
 ```
 
-## Output
+## 5. Output
 
 Training generates timestamped results in `outputs/`:
 
@@ -134,6 +149,10 @@ Training generates timestamped results in `outputs/`:
 - **Denoising trajectory**: GIF showing the reverse diffusion process
 - **Quality metrics**: Evaluation of generated samples vs. original data
 
-## Development
+## 6. Development
 
 The project includes comprehensive unit, integration, and end-to-end tests with pytest, type checking with mypy, and code formatting with black/isort. Run tests with `uv run pytest`.
+
+## 7. References
+
+See [docs/references.md](docs/references.md) for the complete list of references.
