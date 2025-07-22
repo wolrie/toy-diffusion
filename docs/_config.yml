@@ -33,6 +33,11 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - .gitignore
+  - vendor/
+  - node_modules/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
 
 # Social
 github_username: wolrie
