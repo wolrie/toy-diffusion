@@ -4,12 +4,12 @@
 
 This repo was written to serve as a starting point for a technical talk on diffusion language models. It contains an minimalistic implementation for a toy diffusion model for 2d data generation. This implementation demonstrates the core concepts of diffusion probabilistic models using a simple 2D Swiss Roll dataset.
 
-The idea for this implementation was spawned by two papers (see [docs/references.md](docs/references.md) for more info and links):
+The idea for this implementation was spawned by two papers (see the references [below](#7-references) for more info and links):
 
-- **Forward/reverse diffusion framework**: Based on Sohl-Dickstein et al. (2015) - the original thermodynamics-inspired approach. The swiss roll dataset was also used there.
-- **DDPM training algorithm**: Follows Ho et al. (2020) - the practical denoising objective and simplified training procedure.
+- **Forward/reverse diffusion framework**: Based on [1] - the original thermodynamics-inspired approach. The swiss roll dataset was also used there.
+- **DDPM training algorithm**: Follows [2] - the practical denoising objective and simplified training procedure.
 
-This toy implementation follows the DDPM framework from Ho et al. (2020), specifically:
+This toy implementation follows the DDPM framework from [2], specifically:
 
 - **Noise Scheduling:** Linear beta scheduling as described in the DDPM paper
 - **Loss Function:** Simplified denoising objective (MSE between predicted and actual noise)
@@ -152,4 +152,8 @@ The project includes comprehensive unit, integration, and end-to-end tests with 
 
 ## 7. References
 
-See [docs/references.md](docs/references.md) for the complete list of references.
+[1] Sohl-Dickstein, J., Weiss, E., Maheswaranathan, N., & Ganguli, S. (2015). Deep Unsupervised Learning using Nonequilibrium Thermodynamics. In *Proceedings of the 32nd International Conference on Machine Learning* (pp. 2256-2265).
+**Links:** [PMLR](https://proceedings.mlr.press/v37/sohl-dickstein15.html) | [ArXiv](https://arxiv.org/abs/1503.03585) | [GitHub](https://github.com/Sohl-Dickstein/Diffusion-Probabilistic-Models)
+
+[2] Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. In *Advances in Neural Information Processing Systems* (Vol. 33, pp. 6840-6851).
+**Links:** [NeurIPS](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html) | [ArXiv](https://arxiv.org/abs/2006.11239) | [GitHub](https://github.com/hojonathanho/diffusion)
