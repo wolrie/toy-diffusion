@@ -40,12 +40,16 @@ Formally, diffusion models define two Markov processes over a sequence of latent
 - $\beta_t \in (0,1)$ is the noise schedule controlling corruption rate at step $t$
 
 1. **Forward Process**: A fixed noise corruption process that gradually destroys structure
-   $$q(x_{1:T} \mid x_0) = \prod_{t=1}^T q(x_t \mid x_{t-1})$$
-   $$q(x_t \mid x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)$$
+   $$\begin{align}
+   q(x_{1:T} \mid x_0) &= \prod_{t=1}^T q(x_t \mid x_{t-1}) \\
+   q(x_t \mid x_{t-1}) &= \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)
+   \end{align}$$
 
 2. **Reverse Process**: A learned denoising process that reconstructs data from noise
-   $$p_\theta(x_{0:T}) = p(x_T) \prod_{t=1}^T p_\theta(x_{t-1} \mid x_t)$$
-   $$p_\theta(x_{t-1} \mid x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
+   $$\begin{align}
+   p_\theta(x_{0:T}) &= p(x_T) \prod_{t=1}^T p_\theta(x_{t-1} \mid x_t) \\
+   p_\theta(x_{t-1} \mid x_t) &= \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))
+   \end{align}$$
 
 where $\theta$ represents the learnable parameters of our neural network, and $\mu_\theta, \Sigma_\theta$ are the predicted mean and covariance functions.
 

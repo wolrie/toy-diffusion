@@ -26,11 +26,19 @@
           displayMath: [['$$', '$$'], ['\\[', '\\]']],
           processEscapes: true,
           processEnvironments: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-          TeX: {
-            equationNumbers: { autoNumber: "AMS" },
-            extensions: ["AMSmath.js", "AMSsymbols.js"]
-          }
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        TeX: {
+          equationNumbers: { autoNumber: "AMS" },
+          extensions: ["AMSmath.js", "AMSsymbols.js"]
+        },
+        "HTML-CSS": {
+          displayAlign: "center",
+          displayIndent: "0em"
+        },
+        CommonHTML: {
+          displayAlign: "center",
+          displayIndent: "0em"
         }
       });
     </script>

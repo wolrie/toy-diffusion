@@ -51,9 +51,22 @@ pre, code {
   margin: 1rem 0;
 }
 
-// Math equations (if using MathJax)
+// Math equations (MathJax styling)
 .MathJax_Display {
-  margin: 1rem 0;
+  margin: 1.5rem 0 !important;
+  text-align: center !important;
+}
+
+// Ensure display math is centered and on new lines
+.MathJax {
+  display: block;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+// Fix for align environments
+.MathJax_Display .MathJax {
+  display: inline-block;
 }
 
 // Footer section
