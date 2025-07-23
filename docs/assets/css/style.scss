@@ -55,6 +55,7 @@ pre, code {
 .MathJax_Display {
   margin: 1.5rem 0 !important;
   text-align: center !important;
+  font-size: 1.1em !important;
 }
 
 // Ensure display math is centered and on new lines
@@ -62,11 +63,22 @@ pre, code {
   display: block;
   text-align: center;
   margin: 1.5rem 0;
+  font-size: 1.1em !important;
 }
 
 // Fix for align environments
 .MathJax_Display .MathJax {
   display: inline-block;
+}
+
+// Scale up inline math to match surrounding text
+.MathJax_Display, .MathJax, span.MathJax {
+  font-size: 1.1em !important;
+}
+
+// Ensure inline math matches text size
+p .MathJax, li .MathJax {
+  font-size: 1.1em !important;
 }
 
 // Footer section
