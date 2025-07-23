@@ -20,6 +20,7 @@ highlighter: rouge
 kramdown:
   syntax_highlighter: rouge
   input: GFM
+  math_engine: mathjax
 
 # Collections
 collections:
